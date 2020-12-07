@@ -252,7 +252,7 @@ async def main():
     if args.action:
         if args.action == 'break':
             await app.cut_break()
-        if args.action == 'stop':
+        elif args.action == 'stop':
             await app.stop()
         elif args.action == 'strip':
             await app.cut_strip()
