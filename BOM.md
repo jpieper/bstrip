@@ -2,10 +2,10 @@
 
 The bill of materials looks like this:
 
-* 2x moteus r4.5 controller
-* 2x 5208 brushless motor
+* 2x moteus r4.5 controller [mjbots moteus](https://mjbots.com/products/moteus-r4-5)
+* 2x mj5208 brushless motor [mjbots mj5208](https://mjbots.com/products/mj5208)
 * 1x Raspberry Pi (3 or 4)
-* 1x mjbots pi3hat
+* 1x mjbots pi3hat [mjbots pi3hat](https://mjbots.com/products/mjbots-pi3-hat-r4-2)
 * 1x Paladin Tools PA1161 Wire Stripper
 * 1x MEAN WELL LRS-350-24 24V Power Supply
 * 1x URBEST Inlet Fuse Switch Combo [amazon link](https://www.amazon.com/gp/product/B00ME5YAPK)
