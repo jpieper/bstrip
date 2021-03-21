@@ -13,4 +13,4 @@ on a 3D printer, and python source code for driving the machine.
 
 * [Bill of Materials](BOM.md)
 * [3D models](hw/)
-* [Source Code](sw/)
+* [Source Code](src/cutwire.py)
