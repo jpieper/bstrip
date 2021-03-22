@@ -64,7 +64,6 @@ class Application:
                 break
 
         self.wire_start = result.values[moteus.Register.POSITION]
-        print("WIRE_START:", self.wire_start)
 
     async def stop(self):
         await self.drive.set_stop()
@@ -193,6 +192,7 @@ class Application:
             await self.cut_break()
 
         for n in range(args.count):
+            print("COUNT:", n)
             await self.set_wire_start()
 
             if args.strip != 0.0:
