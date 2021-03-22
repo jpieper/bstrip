@@ -14,3 +14,5 @@ on a 3D printer, and python source code for driving the machine.
 * [Bill of Materials](BOM.md)
 * [3D models](hw/)
 * [Source Code](src/cutwire.py)
+
+Overview video: https://www.youtube.com/watch?v=_LFLcuUfIaE
