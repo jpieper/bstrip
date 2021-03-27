@@ -12,7 +12,8 @@ This repository contains the bill of materials, models to be printed
 on a 3D printer, and python source code for driving the machine.
 
 * [Bill of Materials](BOM.md)
-* [3D models](hw/)
+* [Fusion 360 Source CAD](https://a360.co/3fsq1WW)
+* [3D printer models](hw/)
 * [Source Code](src/cutwire.py)
 
 Overview video: https://www.youtube.com/watch?v=_LFLcuUfIaE
