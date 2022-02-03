@@ -17,3 +17,16 @@ on a 3D printer, and python source code for driving the machine.
 * [Source Code](src/cutwire.py)
 
 Overview video: https://www.youtube.com/watch?v=_LFLcuUfIaE
+
+# Build instructions #
+
+TODO
+
+## Motor configuration ##
+
+After setting IDs and calibrating motors, the following configuration files need to be installed on each controller.
+
+```
+sudo python3 -m moteus.moteus_tool -t 1 --write-config servo_1.cfg
+sudo python3 -m moteus.moteus_tool -t 1 --write-config servo_2.cfg
+```
