@@ -22,7 +22,47 @@ Overview video: https://www.youtube.com/watch?v=_LFLcuUfIaE
 
 TODO
 
-## Motor configuration ##
+## Raspberry Pi ##
+
+Install a 32 bit Raspberry Pi OS.  A GUI is not required.
+
+Then install the moteus python packages:
+
+```
+sudo pip3 install moteus moteus-pi3hat
+```
+
+## Setting Motor IDs ##
+
+First, *never* hot plug the power cables, although it is OK to do so
+with CAN.
+
+Second, to set the ID for the cutter motor, connect the cutter motor
+alone to JC1 on the pi3hat.  Then run:
+
+```
+sudo python3 -m moteus.moteus_tool -t 1 --console
+conf set id.id 2
+<CTRL-D>
+sudo python3 -m moteus.moteus_tool -t 2 --console
+conf write
+<CTRL-D>
+```
+
+You should see an `OK` from the `conf write`.  Now both servos can be
+daisy chained together on JC1.
+
+## Motor calibration ##
+
+The two motors should then be calibrated, with no load attached:
+
+```
+sudo python3 -m moteus.moteus_tool -t 1 --calibrate --cal-invert
+sudo python3 -m moteus.moteus_tool -t 2 --calibrate --cal-bw-hz 400
+```
+
+
+## Motor Configuration ##
 
 After setting IDs and calibrating motors, the following configuration files need to be installed on each controller.
 

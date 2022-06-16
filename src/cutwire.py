@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-# Copyright 2020 Josh Pieper, jjp@pobox.com.
+# Copyright 2020-2022 Josh Pieper, jjp@pobox.com.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,9 +33,7 @@ class Application:
         self.args = args
 
         qr = moteus.QueryResolution()
-        qr.position = 3
-        qr.velocity = 3
-        qr.torque = 3
+        qr.trajectory_complete = moteus.INT8
         self.drive = moteus.Controller(id=1, query_resolution=qr)
         self.cut = moteus.Controller(id=2)
 
@@ -79,10 +77,11 @@ class Application:
                 velocity=2.0,
                 maximum_torque=2.0,
                 stop_position=0.0,
-                feedforward_torque=-.30,
+                feedforward_torque=-1.0,
                 query=True)
-            if result and result.values[moteus.Register.POSITION] < 0.01:
-                break
+            if result:
+                if result.values[moteus.Register.POSITION] < 0.006:
+                    break
 
         await asyncio.sleep(0.05)
 
@@ -113,11 +112,11 @@ class Application:
                 position=math.nan,
                 velocity=2.0,
                 maximum_torque=2.0,
-                stop_position=0.008 if not extra else 0.005,
+                stop_position=0.008 if not extra else 0.006,
                 feedforward_torque=-0.1,
                 watchdog_timeout=math.nan,
                 query=True)
-            if result and result.values[moteus.Register.POSITION] < 0.02:
+            if result and result.values[moteus.Register.POSITION] < 0.016:
                 break
 
         # We wait a bit for the insulation to deform.
@@ -128,12 +127,14 @@ class Application:
                 position=math.nan,
                 velocity=4.0,
                 maximum_torque=1.0,
-                stop_position=0.020,
+                stop_position=0.014,
                 feedforward_torque=-0.05,
                 watchdog_timeout=math.nan,
                 query=True)
-            if result and result.values[moteus.Register.POSITION] > 0.01:
+            if result and result.values[moteus.Register.POSITION] > 0.008:
                 break
+
+        await asyncio.sleep(0.05)
 
     async def cut_release(self):
         '''Release the cutter into the disengaged position.  Usually from the
@@ -167,22 +168,21 @@ class Application:
 
         while True:
             result = await self.drive.set_position(
-                position=math.nan,
-                velocity=2.0,
+                position=desired_pos,
+                velocity=0.0,
                 maximum_torque=2.0,
-                stop_position=desired_pos,
+                velocity_limit=2.0,
+                accel_limit=10.0,
                 watchdog_timeout=math.nan,
                 feedforward_torque=feedforward,
                 kp_scale=kp,
                 query=True)
             if result is None:
                 continue
-            error_cm = (result.values[moteus.Register.POSITION] -
-                        desired_pos) * DRIVE_SCALE_CM
-            if abs(error_cm) < 0.2:
+            if result.values[moteus.Register.TRAJECTORY_COMPLETE]:
                 break
 
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.20)
 
     async def wire(self):
         args = self.args
@@ -192,7 +192,7 @@ class Application:
             await self.cut_break()
 
         for n in range(args.count):
-            print("COUNT:", n)
+            print("CUT NUMBER:", n + 1)
             await self.set_wire_start()
 
             if args.strip != 0.0:
@@ -202,7 +202,7 @@ class Application:
                 await self.cut_strip()
                 await self.debug_delay()
 
-                await self.drive_advance(-STRIP_EXTRA_RETRACT_CM, kp=4)
+                await self.drive_advance(-STRIP_EXTRA_RETRACT_CM, kp=1)
                 await self.debug_delay()
 
                 await self.cut_release()
