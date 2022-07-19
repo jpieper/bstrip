@@ -171,15 +171,18 @@ class Application:
                 position=desired_pos,
                 velocity=0.0,
                 maximum_torque=2.0,
-                velocity_limit=2.0,
-                accel_limit=10.0,
+                velocity_limit=3.0,
+                accel_limit=15.0,
                 watchdog_timeout=math.nan,
                 feedforward_torque=feedforward,
                 kp_scale=kp,
                 query=True)
             if result is None:
                 continue
-            if result.values[moteus.Register.TRAJECTORY_COMPLETE]:
+            error_cm = (result.values[moteus.Register.POSITION] -
+                        desired_pos) * DRIVE_SCALE_CM
+            if (abs(error_cm) < 0.2 and
+                result.values[moteus.Register.TRAJECTORY_COMPLETE]):
                 break
 
         await asyncio.sleep(0.20)
