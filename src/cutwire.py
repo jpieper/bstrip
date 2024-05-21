@@ -63,10 +63,6 @@ class Application:
 
         self.wire_start = result.values[moteus.Register.POSITION]
 
-    async def stop(self):
-        await self.drive.set_stop()
-        await self.cut.set_stop()
-
     async def cut_break(self):
         '''Execute a full break with the cutter.  Actuate it all the way, then
         release it all the way.
